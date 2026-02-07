@@ -1,8 +1,17 @@
 -- ISP Billing System Database Schema
 -- Compatible with MariaDB 10.x
+-- Database User: billing | Password: Billing123
 
--- Create ISP Billing Database
+-- Create databases
 CREATE DATABASE IF NOT EXISTS isp_billing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS radius CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Create user and grant privileges
+CREATE USER IF NOT EXISTS 'billing'@'localhost' IDENTIFIED BY 'Billing123';
+GRANT ALL PRIVILEGES ON isp_billing.* TO 'billing'@'localhost';
+GRANT ALL PRIVILEGES ON radius.* TO 'billing'@'localhost';
+FLUSH PRIVILEGES;
+
 USE isp_billing;
 
 -- Users Table (Admin users)
@@ -186,8 +195,7 @@ INSERT INTO settings (setting_key, setting_value) VALUES
 ('smtp_from_email', 'noreply@example.com'),
 ('smtp_from_name', 'ISP Billing');
 
--- Create RADIUS database
-CREATE DATABASE IF NOT EXISTS radius CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- Create RADIUS tables
 USE radius;
 
 -- Standard FreeRADIUS Tables

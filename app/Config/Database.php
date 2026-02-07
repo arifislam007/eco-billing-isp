@@ -12,8 +12,8 @@ class Database extends BaseConfig
             'default' => [
                 'DSN'      => '',
                 'hostname' => 'localhost',
-                'username' => 'ispuser',
-                'password' => 'your_password_here',
+                'username' => 'billing',
+                'password' => 'Billing123',
                 'database' => 'isp_billing',
                 'DBDriver' => 'MySQLi',
                 'DBPrefix' => '',
@@ -31,8 +31,8 @@ class Database extends BaseConfig
             'radius' => [
                 'DSN'      => '',
                 'hostname' => 'localhost',
-                'username' => 'freeradius',
-                'password' => 'radius_password_here',
+                'username' => 'billing',
+                'password' => 'Billing123',
                 'database' => 'radius',
                 'DBDriver' => 'MySQLi',
                 'DBPrefix' => '',
@@ -52,8 +52,8 @@ class Database extends BaseConfig
             'default' => [
                 'DSN'      => '',
                 'hostname' => 'localhost',
-                'username' => 'ispuser',
-                'password' => 'your_password_here',
+                'username' => 'billing',
+                'password' => 'Billing123',
                 'database' => 'isp_billing',
                 'DBDriver' => 'MySQLi',
                 'DBPrefix' => '',
@@ -71,8 +71,8 @@ class Database extends BaseConfig
             'radius' => [
                 'DSN'      => '',
                 'hostname' => 'localhost',
-                'username' => 'freeradius',
-                'password' => 'radius_password_here',
+                'username' => 'billing',
+                'password' => 'Billing123',
                 'database' => 'radius',
                 'DBDriver' => 'MySQLi',
                 'DBPrefix' => '',

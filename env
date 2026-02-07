@@ -1,0 +1,76 @@
+# --------------------------------------------------------------------
+# CodeIgniter 4 Environment Configuration
+# --------------------------------------------------------------------
+
+# --------------------------------------------------------------------
+# APP
+# --------------------------------------------------------------------
+app.baseURL = ''
+# If you have issues with URLs, uncomment and set to your base URL
+# app.baseURL = 'http://192.168.2.61:8080/'
+
+app.indexPage = 'index.php'
+app.charset = 'UTF-8'
+app.locale = 'en'
+app.defaultLocale = 'en'
+app.encoding = 'UTF-8'
+
+# --------------------------------------------------------------------
+# DATABASE
+# --------------------------------------------------------------------
+database.default.hostname = localhost
+database.default.database = isp_billing
+database.default.username = billing
+database.default.password = Billing123
+database.default.DBDriver = MySQLi
+database.default.port = 3306
+
+database.radius.hostname = localhost
+database.radius.database = radius
+database.radius.username = billing
+database.radius.password = Billing123
+database.radius.DBDriver = MySQLi
+database.radius.port = 3306
+
+# --------------------------------------------------------------------
+# ENCRYPTION
+# --------------------------------------------------------------------
+# encryption.key = ''
+# encryption.driver = OpenSSL
+# encryption.blockSize = 16
+# encryption.hash = 'SHA512'
+
+# --------------------------------------------------------------------
+# SESSION
+# --------------------------------------------------------------------
+# session.driver = 'CodeIgniter\Session\Handlers\FileHandler'
+# session.savePath = writable/session
+# session.cookieName = ci_session
+# session.expire = 7200
+# session.matchIP = false
+# session.timeToUpdate = 300
+# session.regenerateDestroy = false
+
+# --------------------------------------------------------------------
+# LOGGER
+# --------------------------------------------------------------------
+# logger.threshold = 9
+
+# --------------------------------------------------------------------
+# CURL
+# --------------------------------------------------------------------
+# curl.allowHostNames = []
+# curl.shareSSL = true
+# curl.SSLCertPath = ''
+# curl.SSLKeyPath = ''
+
+# --------------------------------------------------------------------
+# SECURITY
+# --------------------------------------------------------------------
+# security.tokenName = 'csrf_token'
+# security.headerName = 'X-CSRF-TOKEN'
+# security.cookieName = 'csrf_cookie'
+# security.expires = 7200
+# security.regenerate = true
+# security.redirect = true
+# security.samesite = 'Lax'

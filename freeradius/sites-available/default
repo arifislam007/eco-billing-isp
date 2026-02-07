@@ -1,0 +1,170 @@
+# FreeRADIUS Default Site Configuration
+# Copy to /etc/freeradius/3.0/sites-available/default
+
+server default {
+    # Listen on all interfaces
+    listen {
+        type = auth
+        ipaddr = *
+        port = 0
+        limit {
+            max_connections = 16
+            lifetime = 0
+            idle_timeout = 30
+        }
+    }
+
+    listen {
+        type = acct
+        ipaddr = *
+        port = 0
+        limit {
+            max_connections = 16
+            lifetime = 0
+            idle_timeout = 30
+        }
+    }
+
+    # Authentication module
+    authenticate {
+        # Use SQL for authentication
+        Auth-Type SQL {
+            sql
+        }
+        # PAP authentication (most common for PPPoE/Hotspot)
+        PAP
+        # CHAP authentication
+        CHAP
+        # MS-CHAP for Windows clients
+        MS-CHAP
+        MS-CHAPv2
+        # Digest authentication
+        Digest
+        # Unix authentication (fallback)
+        Unix
+    }
+
+    # Authorization
+    authorize {
+        # Process Autz-Type directives
+        Autz-Type Status-Server {
+        }
+        # Check for expiration
+        -SQL
+        # Filter user attributes
+        -expiration
+        # Log beginning of request
+        preprocess
+        # Check huntgroups
+        huntgroups
+        # Perform secondary authorization
+        -realm
+        -IPASS
+        # Update &$TLS-FreeRADIUS-Session
+        tls
+        # Remove reply attributes if needed
+        -eap
+        # Perform SQL authorization
+        sql
+        # Group membership
+        -sql
+        # Process $INCLUDE files
+        -expiration
+        # Log expiration
+        logintime
+        # Check Simultaneous-Use
+        -sql
+    }
+
+    # Pre-accounting
+    preacct {
+        preprocess
+        # Check huntgroups
+        huntgroups
+        # Perform secondary checks
+        -IPASS
+        # Acct-Type Fallback
+        acct_unique
+    }
+
+    # Accounting
+    accounting {
+        # Process Acct-Type directives
+        -SQL
+        # Log start/stop records
+        -sql
+        # Detail accounting
+        detail
+        # BSD-style accounting
+        -bsd
+        # Exec programs
+        -exec
+        # Syslog accounting
+        -syslog
+        # SQL accounting
+        sql
+        # SQL logs
+        sql_log
+        # IFRAMES accounting
+        -ima_radutmp
+        # UTC radutmp
+        radutmp
+        # SQL for summary
+        -sql
+        # Copy Acct-Delay-Time to &Session-Wait
+        -Session-Log
+        # Process $INCLUDE files
+    }
+
+    # Session (check simultaneous logins)
+    session {
+        # Read from SQL
+        -sql
+        # Read from radutmp
+        radutmp
+        # SQL for checking
+        -sql
+    }
+
+    # Post-Authentication (after successful auth)
+    post-auth {
+        # Process Post-Auth-Type directives
+        -SQL
+        # Reply log
+        -reply_log
+        # Exec programs
+        -exec
+        # Post-Auth-Type REJECT
+        -insert_acct_class
+        # SQL
+        -sql
+        # SQL logs
+        sql_log
+        # Copy reply attributes
+        -exec
+        # Remove session-state list
+        remove_session_state
+    }
+
+    # Pre-Proxy
+    pre-proxy {
+        # LDAP
+        -ldap
+        # Acct-Type Forward
+        -sql
+        # Perform operations before proxy
+        -eap
+    }
+
+    # Post-Proxy
+    post-proxy {
+        # LDAP
+        -ldap
+        # Acct-Type Reverse
+        -sql
+        # Exec programs
+        -exec
+        # EAP post-proxy
+        -eap
+    }
+}

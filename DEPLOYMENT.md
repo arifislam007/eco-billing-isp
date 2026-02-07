@@ -18,7 +18,7 @@ sudo dnf update -y
 sudo dnf install -y epel-release wget unzip vim git
 
 # Install PHP 8.2 and extensions
-sudo dnf php-cli php-common php-f install -y phppm php-mysqlnd php-gd php-mbstring php-xml php-curl php-json php-tokenizer php-fileinfo php-bcmath
+sudo dnf install -y php php-fpm php-cli php-mysql php-gd php-mbstring php-xml php-curl php-json php-tokenizer php-fileinfo php-bcmath
 ```
 
 ## Step 2: Choose Web Server (Choose ONE)
@@ -33,7 +33,7 @@ sudo systemctl enable httpd
 sudo systemctl start httpd
 
 # Install PHP module for Apache
-sudo dnf install -y php-common php-cli php-httpd
+sudo dnf install -y php-common php-cli
 sudo systemctl restart httpd
 ```
 
@@ -115,19 +115,13 @@ sudo vim /etc/httpd/conf.d/isp-billing.conf
 Add this configuration:
 
 ```apache
-Listen 80
+Listen 8080
 
-<VirtualHost *:80>
+<VirtualHost *:8080>
     ServerName YOUR_SERVER_IP
     DocumentRoot /var/www/html/isp-billing/public
 
     <Directory /var/www/html/isp-billing>
-        Options -Indexes +FollowSymLinks
-        AllowOverride All
-        Require all granted
-    </Directory>
-
-    <Directory /var/www/html/isp-billing/public>
         Options -Indexes +FollowSymLinks
         AllowOverride All
         Require all granted
@@ -146,13 +140,16 @@ Listen 80
 </VirtualHost>
 ```
 
+**IMPORTANT: Enable mod_rewrite:**
 ```bash
-# Test and reload Apache
-sudo httpd -t
-sudo systemctl restart httpd
+# Enable mod_rewrite
+sudo a2enmod rewrite
 
-# Set SELinux permissions
-sudo setsebool -P httpd_can_network_connect on
+# Test Apache configuration
+sudo httpd -t
+
+# Restart Apache
+sudo systemctl restart httpd
 ```
 
 ### Option B: Nginx Server Block
@@ -166,7 +163,7 @@ Add this configuration:
 
 ```nginx
 server {
-    listen 80;
+    listen 8080;
     server_name YOUR_SERVER_IP;
     root /var/www/html/isp-billing/public;
     index index.php index.html;
@@ -183,7 +180,7 @@ server {
         include fastcgi_params;
     }
 
-    # Main location
+    # Main location - URL rewriting
     location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
@@ -202,17 +199,14 @@ server {
 # Test and reload Nginx
 sudo nginx -t
 sudo systemctl reload nginx
-
-# Set SELinux permissions
-sudo setsebool -P httpd_can_network_connect on
 ```
 
 ## Step 7: Configure Firewall
 
 ```bash
-# Allow HTTP
+# Allow HTTP and custom port
 sudo firewall-cmd --permanent --add-service=http
-sudo firewall-cmd --permanent --add-service=https
+sudo firewall-cmd --permanent --add-port=8080/tcp
 
 # Reload firewall
 sudo firewall-cmd --reload
@@ -234,12 +228,7 @@ sudo systemctl start php-fpm
 Open your browser and navigate to:
 
 ```
-http://YOUR_SERVER_IP/admin
-```
-
-Replace `YOUR_SERVER_IP` with your actual server IP address, e.g.:
-```
-http://192.168.1.100/admin
+http://192.168.2.70:8080/admin
 ```
 
 ### Default Login Credentials:
@@ -269,7 +258,7 @@ sudo systemctl restart freeradius
 
 | Item | Apache Location | Nginx Location |
 |------|-----------------|----------------|
-| Web Root | `/var/www/html/isp-billing` | `/var/www/html/isp-billing` |
+| Web Root | `/var/www/html/isp-billing/public` | `/var/www/html/isp-billing/public` |
 | Config File | `/etc/httpd/conf.d/isp-billing.conf` | `/etc/nginx/conf.d/isp-billing.conf` |
 | Apache/Nginx User | `apache` | `nginx` |
 | PHP-FPM Socket | `/var/run/php-fpm/www.sock` | `/var/run/php-fpm/www.sock` |
@@ -305,6 +294,20 @@ sudo tail -f /var/log/php-fpm/www-error.log
 
 # Application logs
 sudo tail -f /var/www/html/isp-billing/writable/logs/
+```
+
+### 404 Not Found Error - Fix
+If you get "Not Found" error when accessing /admin:
+
+```bash
+# Enable mod_rewrite (Apache)
+sudo a2enmod rewrite
+
+# Check if mod_rewrite is enabled
+sudo httpd -M | grep rewrite
+
+# Restart Apache
+sudo systemctl restart httpd
 ```
 
 ### Restart All Services

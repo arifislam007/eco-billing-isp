@@ -6,8 +6,8 @@ use CodeIgniter\Config\BaseConfig;
 
 class App extends BaseConfig
 {
-    public string $baseURL = 'http://localhost:8080/';
-    public string $indexPage = '';
+    public string $baseURL = '';
+    public string $indexPage = 'index.php';
     public string $uriProtocol = 'REQUEST_URI';
     public array $allowedNulls = [];
     public string $defaultLocale = 'en';
@@ -16,7 +16,7 @@ class App extends BaseConfig
     public string $appTimezone = 'Asia/Dhaka';
     public string $charset = 'UTF-8';
     public bool $forceGlobalSecureRequests = false;
-    public string $sessionDriver = 'CodeIgniter\Session\Handlers\DatabaseHandler';
+    public string $sessionDriver = 'CodeIgniter\Session\Handlers\FileHandler';
     public string $sessionCookieName = 'ci_session';
     public int $sessionExpiration = 7200;
     public string $sessionSavePath = WRITEPATH . 'session';
